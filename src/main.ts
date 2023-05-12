@@ -25,6 +25,7 @@ function createEventIfNotExist(calendar: GoogleAppsScript.Calendar.Calendar, mov
 
   const event = calendar.createEvent(`[${movie.confirmationNumber}] ${movie.movieTitle}`, movie.startTime, movie.endTime, {
     location: movie.theater,
+    description: movie.emailLink,
   })
   Logger.log('Calendar Registered: ' + event.getId())
 }

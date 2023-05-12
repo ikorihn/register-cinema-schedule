@@ -13,4 +13,6 @@ export default interface Movie {
   endTime: Date
   // タイトル
   movieTitle: string
+  // mailへのリンク
+  emailLink: string
 }

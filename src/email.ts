@@ -1,39 +1,39 @@
 import Movie from './movie'
 
 export function searchMovie(fromDate: Date): Movie[] {
-  const messages = searchCinemaEmail(fromDate)
-  console.log(`Emails: ${messages}`)
+  const threads = searchCinemaEmail(fromDate)
+  console.log(`Emails: ${threads}`)
 
-  if (messages == null || messages.length == 0) {
+  if (threads == null || threads.length == 0) {
     return []
   }
 
   const movies: Movie[] = []
-  for (const message of messages) {
-    const body = message.getPlainBody()
-    let movie: Movie
-    if (message.getFrom().includes('tokyu-rec.co.jp')) {
-      movie = createMovieFrom109Cinema(body)
-    } else if (message.getFrom().includes('tohotheater.jp')) {
-      movie = createMovieFromToho(body)
+  for (const thread of threads) {
+    for (const message of thread.getMessages()) {
+      const body = message.getPlainBody()
+      let movie: Movie
+      if (message.getFrom().includes('tokyu-rec.co.jp')) {
+        movie = createMovieFrom109Cinema(body, thread.getPermalink())
+      } else if (message.getFrom().includes('tohotheater.jp')) {
+        movie = createMovieFromToho(body, thread.getPermalink())
+      }
+      movies.push(movie)
     }
-    movies.push(movie)
   }
 
   return movies
 }
 
-export function searchCinemaEmail(fromDate: Date): GoogleAppsScript.Gmail.GmailMessage[] {
+export function searchCinemaEmail(fromDate: Date): GoogleAppsScript.Gmail.GmailThread[] {
   const from = ['cinema-ticket@tokyu-rec.co.jp', 'i-net.ticket@ml.tohotheater.jp']
   const subject = ['購入完了']
   const after = Utilities.formatDate(fromDate, "Asia/Tokyo", "yyyy-MM-dd")
 
-  const threads = GmailApp.search(`from:${from.join(' OR ')} subject:"${subject.join(' OR ')}" after:${after}`)
-  const messages: GoogleAppsScript.Gmail.GmailMessage[] = threads.flatMap(t => t.getMessages())
-  return messages
+  return GmailApp.search(`from:${from.join(' OR ')} subject:"${subject.join(' OR ')}" after:${after}`)
 }
 
-export function createMovieFromToho(body: string): Movie | null {
+export function createMovieFromToho(body: string, permaLink: string): Movie | null {
   if (!/購入番号　(\d+)/.test(body)) {
     return null
   }
@@ -59,11 +59,12 @@ export function createMovieFromToho(body: string): Movie | null {
     startTime: startDatetime,
     endTime: endDatetime,
     movieTitle: movieTitle,
+    emailLink: permaLink,
   }
   return movie
 }
 
-export function createMovieFrom109Cinema(body: string): Movie | null {
+export function createMovieFrom109Cinema(body: string, permaLink: string): Movie | null {
   if (!/購入番号：(\d+)/.test(body)) {
     return null
   }
@@ -89,6 +90,7 @@ export function createMovieFrom109Cinema(body: string): Movie | null {
     startTime: startDatetime,
     endTime: endDatetime,
     movieTitle: movieTitle,
+    emailLink: permaLink,
   }
   return movie
 }

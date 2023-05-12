@@ -12,6 +12,9 @@ class GmailThread {
     ms.push(this.message)
     return ms
   }
+  getPermalink(): string {
+    return ''
+  }
 }
 class GmailMessage {
   message: string
@@ -20,7 +23,7 @@ class GmailMessage {
   }
 }
 
-describe('searchTohoEmail', (): void => {
+describe('searchCinemaEmail', (): void => {
   test('normal', (): void => {
     GmailApp.search = jest.fn((arg: string): any[] => {
       const ts: GmailThread[] = []
@@ -37,11 +40,7 @@ describe('searchTohoEmail', (): void => {
 
     const day = new Date('2020-01-02T15:04:05+09:00')
     const actual = searchCinemaEmail(day)
-    const expected: GmailMessage[] = [
-      {
-        message: 'my mail',
-      },
-    ]
+    const expected: GmailThread[] = [new GmailThread('my mail')]
     expect(GmailApp.search).toBeCalledTimes(1)
     expect(actual).toEqual(expected)
   })
@@ -60,7 +59,7 @@ describe('createMovieFromToho', (): void => {
     ■座席番号　A-12
     ■合計金額　1,900円　
     `
-    const actual = createMovieFromToho(arg)
+    const actual = createMovieFromToho(arg, 'https://mail.google.com/mail?extsrc=sync&client=docs&plid=xxxxxxxxxxxxxx')
     const expected: Movie = {
       confirmationNumber: '6992',
       theater: 'ＴＯＨＯシネマズ六本木ヒルズ',
@@ -69,6 +68,7 @@ describe('createMovieFromToho', (): void => {
       endTime: new Date('2020-01-11T15:05:00+09:00'),
       seatNumber: 'A-12',
       totalPrice: 1900,
+      emailLink: 'https://mail.google.com/mail?extsrc=sync&client=docs&plid=xxxxxxxxxxxxxx',
     }
     expect(actual).toStrictEqual(expected)
   })
@@ -87,7 +87,7 @@ describe('createMovieFrom109Cinema', (): void => {
     　　　　　合計1,200円
     座席　　：O -20
     `
-    const actual = createMovieFrom109Cinema(arg)
+    const actual = createMovieFrom109Cinema(arg, 'https://mail.google.com/mail?extsrc=sync&client=docs&plid=xxxxxxxxxxxxxx')
     const expected: Movie = {
       confirmationNumber: '999999',
       theater: '109シネマズ二子玉川',
@@ -96,6 +96,7 @@ describe('createMovieFrom109Cinema', (): void => {
       endTime: new Date('2023-03-21T15:00:00+09:00'),
       seatNumber: 'O -20',
       totalPrice: 1200,
+      emailLink: 'https://mail.google.com/mail?extsrc=sync&client=docs&plid=xxxxxxxxxxxxxx',
     }
     expect(actual).toStrictEqual(expected)
   })
