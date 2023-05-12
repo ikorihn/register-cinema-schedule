@@ -23,7 +23,8 @@
       "ts-jest": {
         "tsConfig": "tsconfig.json"
       },
-      "GmailApp": {}
+      "GmailApp": {},
+      "Utilities": {}
     },
     "testMatch": [
       "<rootDir>/tests/*.ts"

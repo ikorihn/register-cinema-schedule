@@ -1,16 +1,13 @@
-import { searchTohoEmail, createMovieFromEmailBody } from './Email'
+import { searchMovie } from './Email'
 import Movie from './movie'
 
-function createTohoSchedule() {
+function main() {
   const calendar = CalendarApp.getDefaultCalendar()
+
   const date = new Date()
   date.setDate(date.getDate() - 7)
-  const messages = searchTohoEmail(date)
-  console.log(`Emails: ${messages}`)
-  for (const message of messages) {
-    const body = message.getPlainBody()
-    const movie = createMovieFromEmailBody(body)
-
+  const movies = searchMovie(date)
+  for (const movie of movies) {
     createEventIfNotExist(calendar, movie)
   }
 }
@@ -26,7 +23,7 @@ function createEventIfNotExist(calendar: GoogleAppsScript.Calendar.Calendar, mov
     return
   }
 
-  const event = calendar.createEvent(`[${movie.confirmationNumber}] ${movie.movieTitle} (${movie.seatNumber})`, movie.startTime, movie.endTime, {
+  const event = calendar.createEvent(`[${movie.confirmationNumber}] ${movie.movieTitle}`, movie.startTime, movie.endTime, {
     location: movie.theater,
   })
   Logger.log('Calendar Registered: ' + event.getId())
@@ -37,5 +34,5 @@ function createEventIfNotExist(calendar: GoogleAppsScript.Calendar.Calendar, mov
  * デフォルトだと日毎に実行される
  */
 function creatTrigger() {
-  ScriptApp.newTrigger('createTohoSchedule').timeBased().everyHours(1).create()
+  ScriptApp.newTrigger('main').timeBased().everyHours(1).create()
 }
