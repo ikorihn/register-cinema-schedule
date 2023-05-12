@@ -1,33 +1,33 @@
-import { searchMovie } from './Email'
-import Movie from './movie'
+import { searchMovie } from './Email';
+import Movie from './movie';
 
 function main() {
-  const calendar = CalendarApp.getDefaultCalendar()
+  const calendar = CalendarApp.getDefaultCalendar();
 
-  const date = new Date()
-  date.setDate(date.getDate() - 7)
-  const movies = searchMovie(date)
+  const date = new Date();
+  date.setDate(date.getDate() - 7);
+  const movies = searchMovie(date);
   for (const movie of movies) {
-    createEventIfNotExist(calendar, movie)
+    createEventIfNotExist(calendar, movie);
   }
 }
 
 function createEventIfNotExist(calendar: GoogleAppsScript.Calendar.Calendar, movie?: Movie) {
   if (movie == null) {
-    return
+    return;
   }
 
-  const movieEvents = calendar.getEvents(movie.startTime, movie.endTime, { search: `[${movie.confirmationNumber}] ${movie.movieTitle}` })
+  const movieEvents = calendar.getEvents(movie.startTime, movie.endTime, { search: `[${movie.confirmationNumber}] ${movie.movieTitle}` });
   if (movieEvents.length > 0) {
-    Logger.log('Already registered. (count:' + movieEvents.length + ') (' + movieEvents[0].getTitle() + ')')
-    return
+    Logger.log('Already registered. (count:' + movieEvents.length + ') (' + movieEvents[0].getTitle() + ')');
+    return;
   }
 
   const event = calendar.createEvent(`[${movie.confirmationNumber}] ${movie.movieTitle}`, movie.startTime, movie.endTime, {
     location: movie.theater,
     description: movie.emailLink,
-  })
-  Logger.log('Calendar Registered: ' + event.getId())
+  });
+  Logger.log('Calendar Registered: ' + event.getId());
 }
 
 /**
@@ -35,5 +35,5 @@ function createEventIfNotExist(calendar: GoogleAppsScript.Calendar.Calendar, mov
  * デフォルトだと日毎に実行される
  */
 function creatTrigger() {
-  ScriptApp.newTrigger('main').timeBased().everyHours(1).create()
+  ScriptApp.newTrigger('main').timeBased().everyHours(1).create();
 }

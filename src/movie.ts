@@ -1,18 +1,18 @@
 export default interface Movie {
   // 購入番号
-  confirmationNumber: string
+  confirmationNumber: string;
   // 劇場
-  theater: string
+  theater: string;
   // 金額
-  totalPrice: number
+  totalPrice: number;
   // 席番号
-  seatNumber: string
+  seatNumber: string;
   // 開始時間
-  startTime: Date
+  startTime: Date;
   // 終了時間
-  endTime: Date
+  endTime: Date;
   // タイトル
-  movieTitle: string
+  movieTitle: string;
   // mailへのリンク
-  emailLink: string
+  emailLink: string;
 }

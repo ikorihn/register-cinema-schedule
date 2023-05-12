@@ -35,7 +35,7 @@ describe('searchCinemaEmail', (): void => {
       return ts
     })
     Utilities.formatDate = jest.fn((date: GoogleAppsScript.Base.Date, timeZone: string, format: string): string => {
-      return "2020-01-02"
+      return '2020-01-02'
     })
 
     const day = new Date('2020-01-02T15:04:05+09:00')
