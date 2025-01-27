@@ -1,4 +1,4 @@
-import { searchMovie } from './Email';
+import { searchMovie } from './email';
 import Movie from './movie';
 
 function main() {
@@ -37,3 +37,6 @@ function createEventIfNotExist(calendar: GoogleAppsScript.Calendar.Calendar, mov
 function creatTrigger() {
   ScriptApp.newTrigger('main').timeBased().everyHours(1).create();
 }
+
+(global as any).main = main;
+(global as any).creatTrigger = creatTrigger;
