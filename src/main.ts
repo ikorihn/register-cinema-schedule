@@ -17,7 +17,7 @@ function createEventIfNotExist(calendar: GoogleAppsScript.Calendar.Calendar, mov
     return;
   }
 
-  const movieEvents = calendar.getEvents(movie.startTime, movie.endTime, { search: `[${movie.confirmationNumber}] ${movie.movieTitle}` });
+  const movieEvents = calendar.getEvents(movie.startTime, movie.endTime, { search: `[${movie.confirmationNumber}]` });
   if (movieEvents.length > 0) {
     Logger.log('Already registered. (count:' + movieEvents.length + ') (' + movieEvents[0].getTitle() + ')');
     return;
@@ -35,7 +35,7 @@ function createEventIfNotExist(calendar: GoogleAppsScript.Calendar.Calendar, mov
  * デフォルトだと日毎に実行される
  */
 function creatTrigger() {
-  ScriptApp.newTrigger('main').timeBased().everyHours(1).create();
+  ScriptApp.newTrigger('main').timeBased().everyHours(6).create();
 }
 
 (global as any).main = main;
